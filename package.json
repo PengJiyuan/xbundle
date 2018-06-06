@@ -1,0 +1,24 @@
+{
+  "name": "xbundle",
+  "version": "0.0.0",
+  "description": "Get out of webpack and rollup config.",
+  "keywords": [
+    "webpack",
+    "rollup",
+    "zero-config"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PengJiyuan/xbundle.git"
+  },
+  "author": "PengJiyuan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PengJiyuan/xbundle/issues"
+  },
+  "homepage": "https://github.com/PengJiyuan/xbundle#readme"
+}
