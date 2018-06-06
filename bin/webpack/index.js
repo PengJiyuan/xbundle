@@ -12,8 +12,9 @@ program
   .version(pkg.version)
   .option('--webpack', 'Use Webpack to bundle you files.')
   .option('--rollup', 'Use Rollup to bundle you files.')
-  .option('--analyze', 'Visualize size of webpack output files with an interactive zoomable treemap.')
-  .option('--modifyVars [modifyVars]', 'Enables run-time modification of Less variables.')
+  .option('--ay, --analyze', 'Visualize size of webpack output files with an interactive zoomable treemap.')
+  .option('--mv, --modifyVars [modifyVars]', 'Enables run-time modification of Less variables.')
+  .option('--bp, --babelPolyfill', 'Use babel-polyfill to polyfill your code.')
   .option('-e, --entry [entry]', 'The entry of xbundle', './src/index.js')
   .option('-j, --jsx', 'Entry extension is .jsx')
   .option('-m, --mode [mode]', 'production or development.', 'production')
@@ -23,7 +24,7 @@ program
   .parse(process.argv);
 
 const fileIndex = program.jsx ? 'index.jsx' : 'index.js';
-const entry = getEntry(program.entry, fileIndex);
+const entry = getEntry(program.entry, fileIndex, program.babelPolyfill);
 
 const config = {
   mode: program.mode,
