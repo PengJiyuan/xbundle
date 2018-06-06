@@ -2,8 +2,9 @@
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const autoprefixer = require('autoprefixer');
+const themer = require('./modifyVars');
 
-module.exports = (mode) => {
+module.exports = (mode, modifyVarsFilePath) => {
   return [
     // babel
     {
@@ -31,7 +32,8 @@ module.exports = (mode) => {
         }, {
           loader: 'less-loader',
           options: {
-            sourceMap: mode !== 'production'
+            sourceMap: mode !== 'production',
+            modifyVars: modifyVarsFilePath ? themer(modifyVarsFilePath) : {}
           }
         }
       ]

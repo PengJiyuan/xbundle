@@ -4,7 +4,7 @@ const path = require('path');
 const program = require('commander');
 const webpack = require('webpack');
 const pkg = require('../../package.json');
-const getEntry = require('./getEntry');
+const getEntry = require('./entry');
 const getRules = require('./rules');
 const getPlugins = require('./plugins');
 
@@ -13,6 +13,7 @@ program
   .option('--webpack', 'Use Webpack to bundle you files.')
   .option('--rollup', 'Use Rollup to bundle you files.')
   .option('--analyze', 'Visualize size of webpack output files with an interactive zoomable treemap.')
+  .option('--modifyVars [modifyVars]', 'Enables run-time modification of Less variables.')
   .option('-e, --entry [entry]', 'The entry of xbundle', './src/index.js')
   .option('-j, --jsx', 'Entry extension is .jsx')
   .option('-m, --mode [mode]', 'production or development.', 'production')
@@ -32,7 +33,7 @@ const config = {
     filename: '[name].bundle.js'
   },
   module: {
-    rules: getRules(program.mode)
+    rules: getRules(program.mode, program.modifyVars)
   },
   plugins: getPlugins(program.mode, program.analyze),
   watch: program.watch && program.mode !== 'production'
