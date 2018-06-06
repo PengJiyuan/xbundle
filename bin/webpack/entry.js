@@ -24,5 +24,5 @@ module.exports = (argEntry, fileIndex, polyfill) => {
     }
   }
 
-  return Object.keys(finalEntry).length > 0 ? finalEntry : argEntry;
+  return finalEntry;
 };
