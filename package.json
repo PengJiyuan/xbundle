@@ -1,6 +1,6 @@
 {
   "name": "xbundle",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Get out of webpack and rollup config.",
   "keywords": [
     "webpack",
