@@ -20,6 +20,7 @@ program
   .option('-j, --jsx', 'Entry extension is .jsx')
   .option('-m, --mode [mode]', 'production or development.', 'production')
   .option('-p, --path [path]', 'The output path of xbundle', './dist')
+  .option('-a, --webpackAlias <alias>', 'Alias for webpack resolve. (A json file)')
   .option('-s, --splitChunks', 'https://webpack.js.org/plugins/split-chunks-plugin/')
   .option('-w, --watch', 'Turn on watch mode.')
   .parse(process.argv);
@@ -49,10 +50,20 @@ const config = {
   resolve: {
     extensions: ['.jsx', '.js', 'json'],
     modules: [
+      path.resolve(process.cwd()),
       'node_modules'
     ],
   }
 };
+
+if(program.mode !== 'production') {
+  config.devtool = 'cheap-source-map';
+}
+
+if(program.webpackAlias) {
+  const alias = fs.readFileSync(path.resolve(program.webpackAlias), 'utf8');
+  config.resolve.alias = JSON.parse(alias);
+}
 
 if(program.splitChunks) {
   config.optimization = {
