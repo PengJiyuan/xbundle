@@ -10,10 +10,12 @@ const getPlugins = require('./plugins');
 
 program
   .version(pkg.version)
-  .option('-e, --entry [entry]', 'The entry of xbundle', path.resolve(process.cwd(), 'src', 'index'))
+  .option('-w, --webpack', 'Use Webpack to bundle you files.')
+  .option('-r, --rollup', 'Use Rollup to bundle you files.')
+  .option('-e, --entry [entry]', 'The entry of xbundle', './src/index.js')
   .option('-j, --jsx', 'Entry extension is .jsx')
   .option('-m, --mode [mode]', 'production or development.', 'production')
-  .option('-p, --path [path]', 'The output path of xbundle', path.resolve(process.cwd(), 'dist'))
+  .option('-p, --path [path]', 'The output path of xbundle', './dist')
   .parse(process.argv);
 
 const fileIndex = program.jsx ? 'index.jsx' : 'index.js';
