@@ -16,6 +16,7 @@ program
   .option('-j, --jsx', 'Entry extension is .jsx')
   .option('-m, --mode [mode]', 'production or development.', 'production')
   .option('-p, --path [path]', 'The output path of xbundle', './dist')
+  .option('--analyze', 'Visualize size of webpack output files with an interactive zoomable treemap.')
   .parse(process.argv);
 
 const fileIndex = program.jsx ? 'index.jsx' : 'index.js';
@@ -31,7 +32,7 @@ const config = {
   module: {
     rules: getRules(program.mode)
   },
-  plugins: getPlugins(program.mode)
+  plugins: getPlugins(program.mode, program.analyze)
 };
 
 webpack(
