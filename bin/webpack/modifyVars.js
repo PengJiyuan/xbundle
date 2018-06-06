@@ -7,7 +7,7 @@ module.exports = (file) => {
   if(extension === 'less') {
     return lessToJs(fs.readFileSync(file, 'utf8'));
   } else if (extension === 'json') {
-    return require(file);
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
   }
   return {};
 };
