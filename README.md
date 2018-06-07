@@ -1,7 +1,7 @@
 # xbundle
-Get out of webpack and rollup config.
+Get out of webpack config.
 
-> This project is just a wrapper on webpack and rollup.
+> This project is just a wrapper on webpack.
 
 ## Install
 
@@ -35,8 +35,6 @@ Usage: xbundle [options]
   Options:
 
     -V, --version                    output the version number
-    --webpack                        Use Webpack to bundle you files.
-    --rollup                         Use Rollup to bundle you files.
     --ay, --analyze                  Visualize size of webpack output files with an interactive zoomable treemap.
     --mv, --modifyVars [modifyVars]  Enables run-time modification of Less variables.
     --bp, --babelPolyfill            Use babel-polyfill to polyfill your code.

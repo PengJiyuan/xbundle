@@ -10,8 +10,6 @@ const getPlugins = require('./plugins');
 
 program
   .version(pkg.version)
-  .option('--webpack', 'Use Webpack to bundle you files.')
-  .option('--rollup', 'Use Rollup to bundle you files.')
   .option('--ay, --analyze', 'Visualize size of webpack output files with an interactive zoomable treemap.')
   .option('--mv, --modifyVars [modifyVars]', 'Enables run-time modification of Less variables.')
   .option('--bp, --babelPolyfill', 'Use babel-polyfill to polyfill your code.')
