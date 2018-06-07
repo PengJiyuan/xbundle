@@ -169,14 +169,20 @@ Specify entry's extension `.jsx`.
 * production -- uglify code.
 * development -- not uglify code
 
-#### -a, --alias [filePath]
+#### -a, --alias [alias]
 
-Webpack resolve alias, [filePath] is a json file like this.
+Webpack resolve alias, [alias] is a json file like this.
 
 ```json
 {
   "moment": "client/lib/monent.js"
 }
+```
+
+or just use like this:
+
+```bash
+xbundle -e src -a moment=client/moment.js
 ```
 
 ```bash
