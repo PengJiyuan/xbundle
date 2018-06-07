@@ -22,6 +22,9 @@
     "url": "https://github.com/PengJiyuan/xbundle/issues"
   },
   "homepage": "https://github.com/PengJiyuan/xbundle#readme",
+  "peerDependencies": {
+    "webpack": "^4.11.0"
+  },
   "dependencies": {
     "autoprefixer": "^8.6.0",
     "babel-core": "^6.26.3",
@@ -41,7 +44,6 @@
     "less-var-parse": "^1.1.0",
     "mini-css-extract-plugin": "^0.4.0",
     "postcss-loader": "^2.1.5",
-    "webpack": "^4.11.0",
     "webpack-bundle-analyzer": "^2.13.1"
   }
 }

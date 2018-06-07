@@ -18,7 +18,7 @@ program
   .option('-p, --path [path]', 'The output path of xbundle', './dist')
   .option('-j, --jsx', 'Entry extension is .jsx')
   .option('-m, --mode [mode]', 'production or development.', 'production')
-  .option('-a, --webpackAlias <alias>', 'Alias for webpack resolve. (A json file)')
+  .option('-a, --alias <alias>', 'Alias for webpack resolve. (A json file | name=path,name=path)')
   .option('-s, --splitChunks', 'https://webpack.js.org/plugins/split-chunks-plugin/')
   .option('-w, --watch', 'Turn on watch mode.')
   .parse(process.argv);
@@ -58,9 +58,20 @@ if(program.mode !== 'production') {
   config.devtool = 'cheap-source-map';
 }
 
-if(program.webpackAlias) {
-  const alias = fs.readFileSync(path.resolve(program.webpackAlias), 'utf8');
-  config.resolve.alias = JSON.parse(alias);
+if(program.alias) {
+  const aliasList = program.alias.split(',');
+  let finalList = aliasList.map((a) => {
+    const inline = a.split('=');
+    return inline.length > 1
+      ? {[inline[0]]: inline[1]}
+      : JSON.parse(fs.readFileSync(path.resolve(a), 'utf8'));
+  });
+
+  const alias = finalList.reduce((pre, cur) => {
+    return Object.assign(pre, cur);
+  });
+
+  config.resolve.alias = alias;
 }
 
 if(program.splitChunks) {

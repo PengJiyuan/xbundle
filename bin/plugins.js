@@ -12,7 +12,7 @@ module.exports = (mode, analyze) => {
       chunkFilename: '[id].css'
     }),
     new webpack.ProgressPlugin((percentage, msg) => {
-      replaceStdout(`${percentage}% ${msg}`);
+      replaceStdout(`${(percentage * 100).toFixed(2)}% ${msg}`);
     })
   ];
   
