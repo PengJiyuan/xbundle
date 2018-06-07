@@ -200,4 +200,4 @@ Show usage help.
 
 ## LICENSE
 
-(MIT)[./LICENSE] © PengJiyuan
+[MIT](./LICENSE) © PengJiyuan
