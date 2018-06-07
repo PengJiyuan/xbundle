@@ -59,14 +59,6 @@ xbundle [options]
 
 Output the xbundle's version.
 
-#### --webpack
-
-Specify xbundle to use webpack to bundle your code.
-
-#### --rollup
-
-Specify xbundle to use rollup to bundle your code.
-
 #### --ay, --analyze
 
 Visualize size of webpack output files with an interactive zoomable treemap. (Only when you use webpack it can work)
