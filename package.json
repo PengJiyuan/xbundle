@@ -1,14 +1,14 @@
 {
   "name": "xbundle",
   "version": "0.0.2",
-  "description": "Get out of webpack and rollup config.",
+  "description": "Get out of webpack config.",
   "keywords": [
     "webpack",
     "rollup",
     "zero-config"
   ],
   "main": "index.js",
-  "bin": "./bin/webpack/index.js",
+  "bin": "./bin/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

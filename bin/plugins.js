@@ -3,7 +3,7 @@
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const replaceStdout = require('../_utils/replace_stdout');
+const replaceStdout = require('./_utils/replace_stdout');
 
 module.exports = (mode, analyze) => {
   let plugins = [
