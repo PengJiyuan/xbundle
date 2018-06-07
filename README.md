@@ -179,14 +179,14 @@ Webpack resolve alias, [alias] is a json file like this.
 }
 ```
 
+```bash
+xbundle -e applications -a alias.json
+```
+
 or just use like this:
 
 ```bash
 xbundle -e src -a moment=client/moment.js
-```
-
-```bash
-xbundle -e applications -a alias.json
 ```
 
 #### -s, --splitChunks
