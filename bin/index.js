@@ -14,6 +14,7 @@ program
   .option('--mv, --modifyVars [modifyVars]', 'Enables run-time modification of Less variables.')
   .option('--bp, --babelPolyfill', 'Use babel-polyfill to polyfill your code.')
   .option('--pfx, --prefix [prefix]', 'Add prefix to output filename.', '')
+  .option('-c, --xConfig [xConfig]', 'config file of xbundle')
   .option('-e, --entry [entry]', 'The entry of xbundle', './src/index.js')
   .option('-p, --path [path]', 'The output path of xbundle', './dist')
   .option('-j, --jsx', 'Entry extension is .jsx')
@@ -23,79 +24,130 @@ program
   .option('-w, --watch', 'Turn on watch mode.')
   .parse(process.argv);
 
-const fileIndex = program.jsx ? 'index.jsx' : 'index.js';
-const entry = getEntry(program.entry, fileIndex, program.babelPolyfill);
-let filename;
+let xConfig, webpackConfig;
 
-if(program.mode === 'production') {
-  filename = `[hash:6].${program.prefix ? (program.prefix + '.') : ''}[name].min.js`;
-} else {
-  filename = `${program.prefix}.[name].js`;
+if(program.xConfig) {
+  xConfig = require(path.resolve(process.cwd(), program.xConfig));
 }
 
-const config = {
-  mode: program.mode,
-  entry,
-  output: {
-    path: path.resolve(program.path),
-    filename
-  },
-  module: {
-    rules: getRules(program.mode, program.modifyVars)
-  },
-  plugins: getPlugins(program.mode, program.analyze),
-  watch: program.watch && program.mode !== 'production',
-  resolve: {
-    extensions: ['.jsx', '.js', 'json'],
-    modules: [
-      path.resolve(process.cwd()),
-      'node_modules'
-    ],
+// If no config file, use command line options.
+if(!xConfig) {
+  const fileIndex = program.jsx ? 'index.jsx' : 'index.js';
+  const entry = getEntry(program.entry, fileIndex, program.babelPolyfill);
+  let filename;
+
+  if(program.mode === 'production') {
+    filename = `[hash:6].${program.prefix ? (program.prefix + '.') : ''}[name].min.js`;
+  } else {
+    filename = `${program.prefix}.[name].js`;
   }
-};
 
-if(program.mode !== 'production') {
-  config.devtool = 'cheap-source-map';
-}
+  webpackConfig = {
+    mode: program.mode,
+    entry,
+    output: {
+      path: path.resolve(program.path),
+      filename
+    },
+    module: {
+      rules: getRules(program.mode, program.modifyVars)
+    },
+    plugins: getPlugins(program.mode, program.analyze),
+    watch: program.watch && program.mode !== 'production',
+    resolve: {
+      extensions: ['.jsx', '.js', 'json'],
+      modules: [
+        path.resolve(process.cwd()),
+        'node_modules'
+      ],
+    }
+  };
 
-if(program.alias) {
-  const aliasList = program.alias.split(',');
-  let finalList = aliasList.map((a) => {
-    const inline = a.split('=');
-    return inline.length > 1
-      ? {[inline[0]]: inline[1]}
-      : JSON.parse(fs.readFileSync(path.resolve(a), 'utf8'));
-  });
+  if(program.mode !== 'production') {
+    webpackConfig.devtool = 'cheap-source-map';
+  }
 
-  const alias = finalList.reduce((pre, cur) => {
-    return Object.assign(pre, cur);
-  });
+  if(program.alias) {
+    const aliasList = program.alias.split(',');
+    let finalList = aliasList.map((a) => {
+      const inline = a.split('=');
+      return inline.length > 1
+        ? {[inline[0]]: inline[1]}
+        : JSON.parse(fs.readFileSync(path.resolve(a), 'utf8'));
+    });
 
-  config.resolve.alias = alias;
-}
+    const alias = finalList.reduce((pre, cur) => {
+      return Object.assign(pre, cur);
+    });
 
-if(program.splitChunks) {
-  config.optimization = {
-    splitChunks: {
-      chunks: 'all',
-      minSize: 30000,
-      minChunks: 1,
-      maxAsyncRequests: 5,
-      maxInitialRequests: 3,
-      automaticNameDelimiter: '.',
-      name: true,
-      cacheGroups: {
-        dll: {
-          test: /[\\/]node_modules[\\/]/,
-          priority: -10
+    webpackConfig.resolve.alias = alias;
+  }
+
+  if(program.splitChunks) {
+    webpackConfig.optimization = {
+      splitChunks: {
+        chunks: 'all',
+        minSize: 30000,
+        minChunks: 1,
+        maxAsyncRequests: 5,
+        maxInitialRequests: 3,
+        automaticNameDelimiter: '.',
+        name: true,
+        cacheGroups: {
+          dll: {
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10
+          }
         }
       }
     }
   }
+} else {
+  /**
+   * use config file.
+   * 
+   * @mode
+   * @entry
+   * @output
+   * @watch
+   * @modifyVars
+   * @analyze
+   * @jsx
+   * @babelPolyfill
+   */
+  if(typeof xConfig === 'function') {
+    xConfig = xConfig(program.mode);
+  }
+  const fileIndex = xConfig.jsx ? 'index.jsx' : 'index.js';
+
+  webpackConfig = {
+    mode: xConfig.mode || 'production',
+    entry: xConfig.entry || path.resolve(process.cwd(), 'src'),
+    output: xConfig.output || {
+      path: path.resolve(process.cwd(), 'dist'),
+      filename: 'bundle.js'
+    },
+    module: {
+      rules: getRules(xConfig.mode, xConfig.modifyVars)
+    },
+    plugins: getPlugins(xConfig.mode, xConfig.analyze),
+    watch: xConfig.watch && xConfig.mode !== 'production',
+    resolve: {
+      extensions: ['.jsx', '.js', 'json'],
+      modules: [
+        path.resolve(process.cwd()),
+        'node_modules'
+      ],
+      alias: xConfig.alias
+    }
+  }
+  if(xConfig.devtool) {
+    webpackConfig.devtool = xConfig.devtool;
+  }
 }
 
 webpack(
-  config,
+  webpackConfig,
   (err, stats) => {
     // only show bundled resource information.
     process.stdout.write(stats.toString({ colors: true }) + "\n");
