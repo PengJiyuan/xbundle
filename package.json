@@ -1,6 +1,6 @@
 {
   "name": "xbundle",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Get out of webpack config.",
   "keywords": [
     "webpack",
