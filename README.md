@@ -30,20 +30,22 @@ package.json
 This is the output when you command `xbundle --help`.
 
 ```bash
-Usage: xbundle [options]
+  Usage: xbundle [options]
 
   Options:
 
     -V, --version                    output the version number
+    --root [root]                    root context relative to process.cwd()
     --ay, --analyze                  Visualize size of webpack output files with an interactive zoomable treemap.
     --mv, --modifyVars [modifyVars]  Enables run-time modification of Less variables.
     --bp, --babelPolyfill            Use babel-polyfill to polyfill your code.
     --pfx, --prefix [prefix]         Add prefix to output filename. (default: )
+    -c, --xConfig [xConfig]          config file of xbundle
     -e, --entry [entry]              The entry of xbundle (default: ./src/index.js)
     -p, --path [path]                The output path of xbundle (default: ./dist)
     -j, --jsx                        Entry extension is .jsx
     -m, --mode [mode]                production or development. (default: production)
-    -a, --webpackAlias <alias>       Alias for webpack resolve. (A json file)
+    -a, --alias <alias>              Alias for webpack resolve. (A json file | name=path,name=path)
     -s, --splitChunks                https://webpack.js.org/plugins/split-chunks-plugin/
     -w, --watch                      Turn on watch mode.
     -h, --help                       output usage information
@@ -58,6 +60,55 @@ xbundle [options]
 #### -V, --version
 
 Output the xbundle's version.
+
+#### -c, --config
+
+Use config file.
+
+```javascript
+/**
+ * use config file.
+ * 
+ * @mode
+ * @entry
+ * @output
+ * @watch
+ * @modifyVars
+ * @analyze
+ * @jsx
+ * @babelPolyfill
+ */
+module.exports = {
+  entry: 'src/index.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js'
+  },
+  jsx: true,
+  modifyVars: path.resolve(__dirname, 'theme', 'index.less'),
+  alias: {
+    'pengjiyuan': path.resolve(__dirname, 'alias/pengjiyuan.js')
+  }
+}
+```
+
+#### --root
+
+webpack.resolve.modules, root context relative to process.cwd().
+
+```bash
+xbundle --root ..
+```
+
+means
+
+```javascript
+{
+  resolve: {
+    modules: [path.resolve(process.cwd(), '..'), 'node_modules']
+  }
+}
+```
 
 #### --ay, --analyze
 
