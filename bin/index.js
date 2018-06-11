@@ -10,6 +10,7 @@ const getPlugins = require('./plugins');
 
 program
   .version(pkg.version)
+  .option('--root [root]', 'root context relative to process.cwd()')
   .option('--ay, --analyze', 'Visualize size of webpack output files with an interactive zoomable treemap.')
   .option('--mv, --modifyVars [modifyVars]', 'Enables run-time modification of Less variables.')
   .option('--bp, --babelPolyfill', 'Use babel-polyfill to polyfill your code.')
@@ -34,12 +35,13 @@ if(program.xConfig) {
 if(!xConfig) {
   const fileIndex = program.jsx ? 'index.jsx' : 'index.js';
   const entry = getEntry(program.entry, fileIndex, program.babelPolyfill);
+  const prefix = program.prefix ? (program.prefix + '.') : '';
   let filename;
 
   if(program.mode === 'production') {
-    filename = `[hash:6].${program.prefix ? (program.prefix + '.') : ''}[name].min.js`;
+    filename = `[hash:6].${prefix}[name].min.js`;
   } else {
-    filename = `${program.prefix}.[name].js`;
+    filename = `${prefix}[name].js`;
   }
 
   webpackConfig = {
@@ -62,6 +64,10 @@ if(!xConfig) {
       ],
     }
   };
+
+  if(program.root) {
+    webpackConfig.resolve.modules.unshift(path.resolve(process.cwd(), program.root));
+  }
 
   if(program.mode !== 'production') {
     webpackConfig.devtool = 'cheap-source-map';
@@ -92,7 +98,6 @@ if(!xConfig) {
         maxAsyncRequests: 5,
         maxInitialRequests: 3,
         automaticNameDelimiter: '.',
-        name: true,
         cacheGroups: {
           dll: {
             test: /[\\/]node_modules[\\/]/,
@@ -150,6 +155,19 @@ webpack(
   webpackConfig,
   (err, stats) => {
     // only show bundled resource information.
-    process.stdout.write(stats.toString({ colors: true }) + "\n");
+    process.stdout.write(stats.toString({
+      assets: true,
+      colors: true,
+      warnings: true,
+      errors: true,
+      errorDetails: true,
+      entrypoints: true,
+      version: true,
+      hash: false,
+      timings: true,
+      chunks: false,
+      chunkModules: false,
+      children: false
+    }) + "\n");
   }
 );
