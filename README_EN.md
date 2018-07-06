@@ -3,6 +3,8 @@ Get out of webpack config.
 
 > This project is just a wrapper on webpack.
 
+[中文文档](README.md)
+
 ## Install
 
 ```bash

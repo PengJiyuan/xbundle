@@ -3,6 +3,8 @@
 
 > 这个项目是在webpack上做的一层封装，所以你既可以享受webpack带来的便捷，又不需要处理webpack复杂的配置。
 
+[English Document](README_EN.md)
+
 ## 安装
 
 ```bash
