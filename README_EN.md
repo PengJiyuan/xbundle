@@ -1,19 +1,19 @@
 # xbundle
-从此告别webpack复杂的配置，一键打包。
+Get out of webpack config.
 
-> 这个项目是在webpack上做的一层封装，所以你既可以享受webpack带来的便捷，又不需要处理webpack复杂的配置。
+> This project is just a wrapper on webpack.
 
-## 安装
+## Install
 
 ```bash
-npm i xbundle -D
+npm i xbundle --save-dev
 ```
 
-xbundle可以全局安装，但是不推荐.
+It can work globally, but not recommend.
 
-## 使用方法
+## Overview
 
-安装xbundle之后，在package.json的scripts中添加打包脚本。
+package.json
 
 ```json
 {
@@ -23,13 +23,11 @@ xbundle可以全局安装，但是不推荐.
 }
 ```
 
-**完全零配置，完全自动化**
+**No more config, absolutely automatic**
 
-你可以放心的在项目中使用react，es6, less, polyfill等，xbundle全部帮你集成了。
+## Cli
 
-## 命令行
-
-以下是你使用 `xbundle --help` 打印的使用信息.
+This is the output when you command `xbundle --help`.
 
 ```bash
   Usage: xbundle [options]
@@ -53,7 +51,7 @@ xbundle可以全局安装，但是不推荐.
     -h, --help                       output usage information
 ```
 
-## 命令
+## Commands
 
 ```bash
 xbundle [options]
@@ -61,13 +59,11 @@ xbundle [options]
 
 #### -V, --version
 
-输出当前xbundle的版本。
+Output the xbundle's version.
 
 #### -c, --config
 
-指定配置文件。虽然xbundle的目标是没有配置，但是你你也可以使用配置文件来处理比较复杂的配置。
-
-`xbundle -c xbundle.config.js`
+Use config file.
 
 ```javascript
 /**
@@ -98,13 +94,13 @@ module.exports = {
 
 #### --root
 
-webpack.resolve.modules, 相对于当前运行目录.
+webpack.resolve.modules, root context relative to process.cwd().
 
 ```bash
 xbundle --root ..
 ```
 
-对应的webpack配置为
+means
 
 ```javascript
 {
@@ -116,16 +112,15 @@ xbundle --root ..
 
 #### --ay, --analyze
 
-展示可视化的打包信息. 
+Visualize size of webpack output files with an interactive zoomable treemap. 
 https://github.com/webpack-contrib/webpack-bundle-analyzer
 
 #### --mv, --modifyVars [filePath]
 
 Enables run-time modification of Less variables (Less).
-在Less打包的时候使用`modifyVars`来进行变量替换。
-`filePath`可以是一个less文件或者json文件。
+the [filePath] can be a json or less file.
 
-比如：
+eg.
 
 ```bash
 xbundle -e list --mv ./theme/index.less
@@ -135,40 +130,38 @@ xbundle -e list --mv ./theme/theme.json
 
 #### --bp, --babelPolyfill
 
-在打包的时候使用babel-polyfill，如果你在写react应用的话，你可能需要打开这个配置。
+Use babel-polyfill to polyfill your code. It probably be used when you write react app.
 
 #### --pfx, --prefix [value]
 
-给打包的文件名添加前缀. (默认: '')
+Add prefix to output filename. (default: '')
 
 ```bash
 # prefix: zh-CN
 
-# 生产模式
+# production mode
 [hash:6].zh-CN.min.js
 
-# 开发模式
+# development mode
 zh-CN.min.js
 ```
 
 #### -e, --entry [filename | directory | mixed]
 
-指定xbundle的入口. (默认: 'bundle=./src/index.js')
+Specify the entry of xbundle. (default: 'bundle=./src/index.js')
 
-打包后的文件需要一个名字，所以entry的格式是这样的 `name=filename`.
+bundle need a name, so you need format it like this `name=filename`.
 
-以下是entry支持的几种形式：
-
-* 文件名
+* filename
 
   ```bash
   xbundle -e home=entry/index.js
   ```
-* 目录
+* directory
 
-  你可以直接指定一个目录为入口，xbundle会自动寻找入口文件`index.js | index.jsx`.
+  You can specify a directory, and xbundle will find the index automatically.
 
-  比如你的文件目录是这样的：
+  eg.
   ```
   my-app
   ├── node_modules
@@ -180,7 +173,7 @@ zh-CN.min.js
   xbundle -e bundle=entry
   ```
 
-  如果你的文件目录是这样的：
+  eg.
   ```
   my-app
   ├── README.md
@@ -192,13 +185,11 @@ zh-CN.min.js
       └── home
           └── index.js
   ```
-
-  如果文件目录如上所示，那么你不需要指定name了，`about`和`home`会被自动当作打包后的名字。
-
+  When the directory like this, you do not need specify the name of bundle, the `about` and `home` will be name.
   ```bash
   xbundle -e applications
   ```
-* 混合使用
+* Mixed
 
   ```bash
   xbundle -e home=src/index.js,applications
@@ -208,11 +199,11 @@ zh-CN.min.js
 
 `Default: './dist'`
 
-指定xbundle打包后的输出目录。
+Specify the output directory of xbundle.
 
 #### -j, --jsx
 
-指定entry的后缀名为jsx， `.jsx`.
+Specify entry's extension `.jsx`.
 
 #### -m, --mode [mode] (production | development)
 
@@ -223,7 +214,7 @@ zh-CN.min.js
 
 #### -a, --alias [alias]
 
-指定webpack.resolve.alias， alias可以是一个json文件或者直接以这样的方式传入`moment=client/moment.js`.
+Webpack resolve alias, [alias] is a json file like this.
 
 ```json
 {
@@ -235,7 +226,7 @@ zh-CN.min.js
 xbundle -e applications -a alias.json
 ```
 
-或者这样:
+or just use like this:
 
 ```bash
 xbundle -e src -a moment=client/moment.js
@@ -243,16 +234,16 @@ xbundle -e src -a moment=client/moment.js
 
 #### -s, --splitChunks
 
-使用splitChunks来进行代码分割.
+When specify, webpack will split chunks into split files.
 https://webpack.js.org/configuration/optimization/#optimization-splitchunks
 
 #### -w, --watch
 
-开启监听模式.
+Open the watch mode.
 
 #### -h, --help
 
-输出帮助信息.
+Show usage help.
 
 ## LICENSE
 
